@@ -1,0 +1,49 @@
+{% extends 'partials/base.html' %}
+{% block title %}Home Page{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div style="background-image:url('/media/background2.jpg') !important;
+      background-position : center;
+      background-size : cover;
+      background-attachment: fixed">
+  <div class="container">
+    <div class="row mt-5 pt-3">
+        <div class="col-md-4">
+            <div class="card my-3 shadow">
+                <div style="background-color: snow;" class="card-body">
+                    <form method="POST">
+                        {% csrf_token %} <!--used to send data in secured way-->
+                        {{ form|crispy }}
+                        <input class="btn btn-primary btn-block" type="submit" value="Post">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {% for post in posts %}
+            <div style="background-color: snow;" class="card shadow my-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="img-thumbnail" src="{{ post.author.profilemodel.image.url}}" alt="img">
+                        </div>
+                        <div class="col-md-8">
+                            <p style="text-align:left;font-size:20px"><b>{{ post.author }}</b> <!--here post is a variable declared in for loop-->
+                                <span style="float:right"><small>{{ post.date_created }}</small></span>
+                            </p>
+                            <hr>
+                            <h3><b>{{ post.title }}</b></h3>
+                            <p class="text-justify my-3">
+                                {{ post.content| truncatechars:151}}
+                            </p>
+                            <a href="{% url 'blog-post-detail' post.id %}" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
